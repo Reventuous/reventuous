@@ -1,0 +1,26 @@
+<Project>
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <LangVersion>9</LangVersion>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <NoWarn>$(NoWarn);CS1591;CS0618;</NoWarn>
+        <IsPackable>true</IsPackable>
+        <Nullable>enable</Nullable>
+        <IncludeSymbols>true</IncludeSymbols>
+        <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+        <UpdateVersionProperties>true</UpdateVersionProperties>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/reventuous/Reventuous.git</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <Description>Event Sourcing library based on Redis streams (fork of the Eventuous library)</Description>
+        <Authors>Claudiu Chis</Authors>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MinVer" Version="2.5.0" PrivateAssets="All" />
+        <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" PrivateAssets="All"/>
+        <PackageReference Include="FluentAssertions" Version="5.10.3"/>
+    </ItemGroup>
+
+</Project>
