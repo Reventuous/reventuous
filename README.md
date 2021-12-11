@@ -3,7 +3,7 @@
 Event Sourcing library for C# using Redis Streams as event store.
 This library is based on the Eventuous library which targets EventStoreDB.
 
-The main driver behind this project is to use one database type for both the write site (event store) and read side (projections).
+The main driver behind this project is to use one database type for both the write side (event store) and read side (projections).
 
 Redis fits this bill as:
 - it provides the streams type that can be used as event store and for subscriptions. 
@@ -29,19 +29,32 @@ Redis Streams doesn't come with system projections like with EventStoreDB (e.g. 
 - register this Pyhthon code as a Redis Gears function, which will create 3 projections $all, $by-category, or $by-event-type:
 
 ```
-def link(x):
-    # project only events for non-projected streams (e.g. not starting with $)
+def project(x):
+    # events are added to streams by RedisEventStore class, in a similar way to running these Redis commands
+    # 
+    #   xadd account:1234 * type AccountCreated data '{"AccountId":"3c8e510c-e00a-4b9b-abf4-b2a37152d625"}'
+    #   xadd account:1234 * type AccountCredited data '{"Amount":50}'
+    #
+    # project only events for non-system streams (e.g. not starting with $)
     if x['key'].startswith('$') is False:
-        # $all
+        # $all projection
         execute('xadd', '$all', '*', 'stream', x['key'], 'position', x['id'])
-        # $by-category:<category>
+
+        # $by-category:<category>, e.g. for streams like "account:xxxx" we'll get a "$by-category:account" stream
         category = x['key'].split(':')
         execute('xadd', '$by-category:' + category[0], '*', 'stream', x['key'], 'position', x['id'])
-        # $by-event-type:<event-type>
+
+        # $by-event-type:<event-type>, e.g. for an event AccountCreated we'll get a "$by-event-type:AccountCreated" stream
         execute('xadd', '$by-event-type:' + x['value']['type'], '*', 'stream', x['key'], 'position', x['id'])
 
 gb = GearsBuilder('StreamReader')
-gb.foreach(link)
+gb.foreach(project)
 gb.register(prefix='*', duration=1, batch=1, trimStream=False)
 
 ```
+There are packages available from nuget.org
+
+import Reventuous;
+import Reventuous.Redis;
+import Reventuous.Subscriptions;
+import Reventuous.Subscriptions.Redis;
