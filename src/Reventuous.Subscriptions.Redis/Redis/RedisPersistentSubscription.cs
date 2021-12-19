@@ -30,7 +30,19 @@ namespace Reventuous.Subscriptions.Redis
             CancellationToken   cancellationToken = default
         )
         {
-            await database.StreamInfoAsync(stream);
+            try
+            {
+                await database.StreamInfoAsync(stream);
+            }
+            catch(RedisServerException e)
+            {
+                // if the stream doesn't exist yet, create it
+                if (e.Message.Contains("ERR no such key"))
+                {
+                    await database.StreamAddAsync(stream, new RedisValue("*"), new RedisValue("*"));
+                }
+                else throw;
+            }
             try 
             {
                 await database.StreamCreateConsumerGroupAsync(

@@ -13,9 +13,9 @@ namespace Subscriptions.Console
         static void Main(string[] args)
         {
             EventMapping.MapEventTypes();
-            //MySubscription.PersistentSubscribe().Wait();
+            MySubscription.PersistentSubscribe().Wait();
             //MySubscription.Subscribe().Wait();
-            MySubscription.SubscribeAll().Wait();
+            //MySubscription.SubscribeAll().Wait();
             Thread.Sleep(1000 * 60);
         }
     }
